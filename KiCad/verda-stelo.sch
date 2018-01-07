@@ -28,7 +28,6 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:arduino_nano
 LIBS:verda-stelo-cache
 EELAYER 25 0
 EELAYER END
@@ -1526,4 +1525,35 @@ Wire Wire Line
 Wire Wire Line
 	10500 2600 5400 2600
 Connection ~ 5400 2600
+$Comp
+L R 10k
+U 1 1 5A5234D5
+P 2900 6850
+F 0 "10k" V 2980 6850 50  0000 C CNN
+F 1 "R" V 2900 6850 50  0000 C CNN
+F 2 "" V 2830 6850 50  0000 C CNN
+F 3 "" H 2900 6850 50  0000 C CNN
+	1    2900 6850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2900 7000 2900 10600
+Connection ~ 2900 10600
+$Comp
+L SW_PUSH SW?
+U 1 1 5A5239D5
+P 2900 6400
+F 0 "SW?" H 3050 6510 50  0000 C CNN
+F 1 "SW_PUSH" H 2900 6320 50  0000 C CNN
+F 2 "" H 2900 6400 50  0000 C CNN
+F 3 "" H 2900 6400 50  0000 C CNN
+	1    2900 6400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2400 5800 2900 5800
+Wire Wire Line
+	2900 800  2900 6100
+Connection ~ 2900 800 
+Connection ~ 2900 5800
 $EndSCHEMATC

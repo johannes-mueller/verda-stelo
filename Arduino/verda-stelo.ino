@@ -20,6 +20,8 @@
 const byte clock_pin = 2;
 const byte latch_pin = 3;
 
+const byte button_pin = 13;
+
 const byte NUM_PIN = 2;
 const byte data_pins[NUM_PIN] = { 4, 5 };
 
@@ -27,12 +29,15 @@ const unsigned int NUM_LEDS = NUM_PIN*8;
 
 byte leds[NUM_LEDS];
 
+const unsigned int long_press = 3000;
+
 const float M_2PI = 6.28;
 
 class AbstractDriver
 {
 public:
 	virtual bool adjust_leds (unsigned int elapsed) = 0;
+	virtual void reset () {}
 };
 
 class DummyDriver : public AbstractDriver
@@ -40,6 +45,7 @@ class DummyDriver : public AbstractDriver
 public:
 	DummyDriver() : _init (false) {}
 	bool adjust_leds (unsigned int elapsed);
+	void reset ();
 
 private:
 	bool _init;
@@ -72,6 +78,10 @@ bool DummyDriver::adjust_leds (unsigned int elapsed)
 	return true;
 };
 
+void DummyDriver::reset ()
+{
+	_init = false;
+}
 
 class WaveDriver : public AbstractDriver
 {
@@ -110,6 +120,13 @@ DummyDriver dummy_driver;
 WaveDriver wave_driver (0.002, 5);
 AbstractDriver* driver;
 
+const byte DRIVER_NUM = 2;
+AbstractDriver* const driver_list[DRIVER_NUM] = {
+	&dummy_driver,
+	&wave_driver
+};
+
+byte driver_index = 0;
 
 
 void reset ()
@@ -162,10 +179,53 @@ void shift_out_frames ()
 	}
 }
 
+void handle_short_press ()
+{
+	reset ();
+	if (++driver_index == DRIVER_NUM) {
+		driver_index = 0;
+	}
+	driver = driver_list[driver_index];
+	driver->reset();
+}
+
+void handle_long_press ()
+{
+}
+
+bool check_button ()
+{
+	static bool pressed = false;
+	static unsigned int last_press = 0;
+
+	//	bool now_pressed = bitRead (PORTB, button_pin - 8);
+
+	bool now_pressed = digitalRead (button_pin);
+
+	if (now_pressed && !pressed) {
+		last_press = millis ();
+		pressed = true;
+		return false;
+	}
+
+	if (!now_pressed && pressed) {
+		if (millis () - last_press > long_press) {
+			handle_long_press ();
+		} else {
+			handle_short_press ();
+		}
+		pressed = false;
+		return true;
+	}
+
+	return false;
+}
+
 void setup ()
 {
 	pinMode (clock_pin, OUTPUT);
 	pinMode (latch_pin, OUTPUT);
+	pinMode (button_pin, INPUT);
 
 	for (byte i=0; i<NUM_PIN; ++i) {
 		pinMode(data_pins[i], OUTPUT);
@@ -173,8 +233,8 @@ void setup ()
 
 	reset();
 
-	driver = &wave_driver;
-
+	driver = driver_list[0];
+	driver_index = 0;
 }
 
 void loop ()
@@ -183,6 +243,8 @@ void loop ()
 	static unsigned int now = 0;
 
 	shift_out_frames ();
+
+	check_button ();
 
 	now = millis ();
 
