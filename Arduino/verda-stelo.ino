@@ -29,14 +29,16 @@ const unsigned int NUM_LEDS = NUM_PIN*8;
 
 byte leds[NUM_LEDS];
 
-const unsigned int long_press = 3000;
+const unsigned long long_press = 3000;
 
 const float M_2PI = 6.28;
+
+const unsigned long change_time = 5000;
 
 class AbstractDriver
 {
 public:
-	virtual bool adjust_leds (unsigned int elapsed) = 0;
+	virtual bool adjust_leds (unsigned long elapsed) = 0;
 	virtual void reset () {}
 };
 
@@ -44,14 +46,14 @@ class DummyDriver : public AbstractDriver
 {
 public:
 	DummyDriver() : _init (false) {}
-	bool adjust_leds (unsigned int elapsed);
+	bool adjust_leds (unsigned long elapsed);
 	void reset ();
 
 private:
 	bool _init;
 };
 
-bool DummyDriver::adjust_leds (unsigned int elapsed)
+bool DummyDriver::adjust_leds (unsigned long elapsed)
 {
 	if (elapsed > 5000) {
 		leds[5] = 127;
@@ -83,22 +85,48 @@ void DummyDriver::reset ()
 	_init = false;
 }
 
+class BlinkDriver : public AbstractDriver
+{
+public:
+	BlinkDriver () : _on (false) {}
+	bool adjust_leds (unsigned long elapsed);
+
+private:
+	const static unsigned int _blink_time = 500;
+	bool _on;
+};
+
+bool BlinkDriver::adjust_leds (unsigned long elapsed)
+{
+	if (elapsed < _blink_time) {
+		return false;
+	}
+
+	_on = !_on;
+	const byte v = _on ? 127 : 0;
+	for (unsigned int i=0; i<NUM_LEDS; ++i) {
+		leds[i] = v;
+	}
+
+	return true;
+};
+
 class WaveDriver : public AbstractDriver
 {
 public:
-	WaveDriver (float step, unsigned int time)
+	WaveDriver (float step, unsigned long time)
 		: _step (step),
 		  _phi (0),
 		  _time (time) {}
-	bool adjust_leds (unsigned int elapsed);
+	bool adjust_leds (unsigned long elapsed);
 
 private:
 	const float _step;
 	float _phi;
-	const unsigned int _time;
+	const unsigned long _time;
 };
 
-bool WaveDriver::adjust_leds (unsigned int elapsed)
+bool WaveDriver::adjust_leds (unsigned long elapsed)
 {
 	if (elapsed < _time) {
 		return false;
@@ -118,6 +146,8 @@ bool WaveDriver::adjust_leds (unsigned int elapsed)
 
 DummyDriver dummy_driver;
 WaveDriver wave_driver (0.002, 5);
+BlinkDriver blink_driver;
+
 AbstractDriver* driver;
 
 const byte DRIVER_NUM = 2;
@@ -128,6 +158,7 @@ AbstractDriver* const driver_list[DRIVER_NUM] = {
 
 byte driver_index = 0;
 
+unsigned long driver_time = 0;
 
 void reset ()
 {
@@ -179,7 +210,7 @@ void shift_out_frames ()
 	}
 }
 
-void handle_short_press ()
+void increment_driver ()
 {
 	reset ();
 	if (++driver_index == DRIVER_NUM) {
@@ -191,12 +222,14 @@ void handle_short_press ()
 
 void handle_long_press ()
 {
+	driver_time = change_time;
+	increment_driver ();
 }
 
 bool check_button ()
 {
 	static bool pressed = false;
-	static unsigned int last_press = 0;
+	static unsigned long last_press = 0;
 
 	//	bool now_pressed = bitRead (PORTB, button_pin - 8);
 
@@ -204,15 +237,25 @@ bool check_button ()
 
 	if (now_pressed && !pressed) {
 		last_press = millis ();
+		driver_time = 0;
 		pressed = true;
 		return false;
 	}
 
+	if (now_pressed && pressed) {
+		if (millis () - last_press > long_press) {
+			driver = &blink_driver;
+		}
+		return false;
+	}
+
 	if (!now_pressed && pressed) {
+		driver = &blink_driver;
 		if (millis () - last_press > long_press) {
 			handle_long_press ();
 		} else {
-			handle_short_press ();
+			increment_driver ();
+			driver_time = 0;
 		}
 		pressed = false;
 		return true;
@@ -239,14 +282,24 @@ void setup ()
 
 void loop ()
 {
-	static unsigned int last_time = 0;
-	static unsigned int now = 0;
+	static unsigned long last_time = 0;
+	static unsigned long last_change = 0;
+	static unsigned long now = 0;
 
 	shift_out_frames ();
 
-	check_button ();
-
 	now = millis ();
+
+	if (check_button ()) {
+		last_time = now;
+		last_change = now;
+	}
+
+	if (driver_time && (now-last_change > driver_time)) {
+		increment_driver ();
+		last_change = now;
+		last_time = now;
+	}
 
 	if (driver->adjust_leds (now-last_time)) {
 		last_time = now;
