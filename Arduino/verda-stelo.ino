@@ -20,7 +20,7 @@
 const byte clock_pin = 2;
 const byte latch_pin = 3;
 
-const byte button_pin = 13;
+const byte button_pin = 12;
 
 const byte NUM_PIN = 2;
 const byte data_pins[NUM_PIN] = { 4, 5 };
@@ -269,6 +269,7 @@ void setup ()
 	pinMode (clock_pin, OUTPUT);
 	pinMode (latch_pin, OUTPUT);
 	pinMode (button_pin, INPUT);
+	pinMode (13, OUTPUT);
 
 	for (byte i=0; i<NUM_PIN; ++i) {
 		pinMode(data_pins[i], OUTPUT);
