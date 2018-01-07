@@ -55,17 +55,6 @@ F 3 "" H 6200 1500 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Arduino_Nano A1
-U 1 1 5A516605
-P 1700 5550
-F 0 "A1" H 1700 5550 60  0000 C CNN
-F 1 "Arduino_Nano" H 1700 5700 60  0000 C CNN
-F 2 "johmue:Arduino_Nano" H 1700 5550 60  0001 C CNN
-F 3 "" H 1700 5550 60  0000 C CNN
-	1    1700 5550
-	1    0    0    -1  
-$EndComp
-$Comp
 L LED D?
 U 1 1 5A516A67
 P 8400 2050
@@ -1044,6 +1033,39 @@ F 3 "" H 7200 8250 50  0000 C CNN
 	1    7200 8250
 	1    0    0    -1  
 $EndComp
+$Comp
+L C C?
+U 1 1 5A58F5B5
+P 7200 10250
+F 0 "C?" H 7225 10350 50  0000 L CNN
+F 1 "100nF" H 7225 10150 50  0000 L CNN
+F 2 "" H 7238 10100 50  0000 C CNN
+F 3 "" H 7200 10250 50  0000 C CNN
+	1    7200 10250
+	1    0    0    -1  
+$EndComp
+$Comp
+L R 10k
+U 1 1 5A5234D5
+P 2900 6850
+F 0 "10k" V 2980 6850 50  0000 C CNN
+F 1 "R" V 2900 6850 50  0000 C CNN
+F 2 "" V 2830 6850 50  0000 C CNN
+F 3 "" H 2900 6850 50  0000 C CNN
+	1    2900 6850
+	1    0    0    -1  
+$EndComp
+$Comp
+L SW_PUSH SW?
+U 1 1 5A5239D5
+P 2900 6400
+F 0 "SW?" H 3050 6510 50  0000 C CNN
+F 1 "SW_PUSH" H 2900 6320 50  0000 C CNN
+F 2 "" H 2900 6400 50  0000 C CNN
+F 3 "" H 2900 6400 50  0000 C CNN
+	1    2900 6400
+	0    1    1    0   
+$EndComp
 Wire Wire Line
 	6900 1750 10500 1750
 Wire Wire Line
@@ -1448,17 +1470,6 @@ Connection ~ 7200 6600
 Wire Wire Line
 	7200 8400 7200 8600
 Connection ~ 7200 8600
-$Comp
-L C C?
-U 1 1 5A58F5B5
-P 7200 10250
-F 0 "C?" H 7225 10350 50  0000 L CNN
-F 1 "100nF" H 7225 10150 50  0000 L CNN
-F 2 "" H 7238 10100 50  0000 C CNN
-F 3 "" H 7200 10250 50  0000 C CNN
-	1    7200 10250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5900 8950 5900 8850
 Wire Wire Line
@@ -1483,41 +1494,11 @@ Wire Wire Line
 	7200 800  7200 2100
 Connection ~ 5900 800 
 Wire Wire Line
-	2400 4700 5000 4700
-Connection ~ 5000 4700
+	4400 1050 5500 1050
 Wire Wire Line
-	2400 4800 5200 4800
-Connection ~ 5200 4800
+	4400 7050 5500 7050
 Wire Wire Line
-	2400 4900 4600 4900
-Wire Wire Line
-	4600 4900 4600 1050
-Wire Wire Line
-	4600 1050 5500 1050
-Wire Wire Line
-	5500 3050 4400 3050
-Wire Wire Line
-	4400 3050 4400 5000
-Wire Wire Line
-	4400 5000 2400 5000
-Wire Wire Line
-	2400 5100 4600 5100
-Wire Wire Line
-	4600 5100 4600 5050
-Wire Wire Line
-	4600 5050 5500 5050
-Wire Wire Line
-	2400 5200 4600 5200
-Wire Wire Line
-	4600 5200 4600 7050
-Wire Wire Line
-	4600 7050 5500 7050
-Wire Wire Line
-	2400 5300 4400 5300
-Wire Wire Line
-	4400 5300 4400 9050
-Wire Wire Line
-	4400 9050 5500 9050
+	4200 9050 5500 9050
 Wire Wire Line
 	1050 6550 900  6550
 Wire Wire Line
@@ -1525,35 +1506,54 @@ Wire Wire Line
 Wire Wire Line
 	10500 2600 5400 2600
 Connection ~ 5400 2600
-$Comp
-L R 10k
-U 1 1 5A5234D5
-P 2900 6850
-F 0 "10k" V 2980 6850 50  0000 C CNN
-F 1 "R" V 2900 6850 50  0000 C CNN
-F 2 "" V 2830 6850 50  0000 C CNN
-F 3 "" H 2900 6850 50  0000 C CNN
-	1    2900 6850
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2900 7000 2900 10600
 Connection ~ 2900 10600
-$Comp
-L SW_PUSH SW?
-U 1 1 5A5239D5
-P 2900 6400
-F 0 "SW?" H 3050 6510 50  0000 C CNN
-F 1 "SW_PUSH" H 2900 6320 50  0000 C CNN
-F 2 "" H 2900 6400 50  0000 C CNN
-F 3 "" H 2900 6400 50  0000 C CNN
-	1    2900 6400
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	2900 800  2900 6100
 Connection ~ 2900 800 
 Wire Wire Line
 	2400 5700 2900 5700
 Connection ~ 2900 5700
+Wire Wire Line
+	2400 4500 5000 4500
+Connection ~ 5000 4500
+Wire Wire Line
+	2400 4600 5200 4600
+Connection ~ 5200 4600
+$Comp
+L Arduino_Nano A1
+U 1 1 5A516605
+P 1700 5550
+F 0 "A1" H 1700 5550 60  0000 C CNN
+F 1 "Arduino_Nano" H 1700 5700 60  0000 C CNN
+F 2 "johmue:Arduino_Nano" H 1700 5550 60  0001 C CNN
+F 3 "" H 1700 5550 60  0000 C CNN
+	1    1700 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2400 4800 4600 4800
+Wire Wire Line
+	4600 4800 4600 3050
+Wire Wire Line
+	4600 3050 5500 3050
+Wire Wire Line
+	2400 4700 4400 4700
+Wire Wire Line
+	4400 4700 4400 1050
+Wire Wire Line
+	2400 4900 4600 4900
+Wire Wire Line
+	4600 4900 4600 5050
+Wire Wire Line
+	4600 5050 5500 5050
+Wire Wire Line
+	2400 5000 4400 5000
+Wire Wire Line
+	4400 5000 4400 7050
+Wire Wire Line
+	2400 5100 4200 5100
+Wire Wire Line
+	4200 5100 4200 9050
 $EndSCHEMATC

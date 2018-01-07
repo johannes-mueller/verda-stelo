@@ -17,13 +17,13 @@
 */
 
 
-const byte clock_pin = 2;
-const byte latch_pin = 3;
+const byte clock_pin = 0;
+const byte latch_pin = 1;
 
 const byte button_pin = 12;
 
 const byte NUM_PIN = 2;
-const byte data_pins[NUM_PIN] = { 4, 5 };
+const byte data_pins[NUM_PIN] = { 2, 3 };
 
 const unsigned int NUM_LEDS = NUM_PIN*8;
 
