@@ -1,4 +1,4 @@
-update=So 07 Jan 2018 00:18:48 CET
+update=Mo 08 Jan 2018 22:04:24 CET
 version=1
 last_client=kicad
 [pcbnew]
@@ -58,4 +58,3 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-LibName30=/tmp/arduino_nano
