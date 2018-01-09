@@ -138,6 +138,8 @@ bool WaveDriver::adjust_leds (unsigned long elapsed)
 		_phi -= _step;
 		if (_phi > 2*M_2PI) {
 			_phi -= 2*M_2PI;
+		} else if (_phi < -2*M_2PI) {
+			_phi += 2*M_2PI;
 		}
 	}
 
